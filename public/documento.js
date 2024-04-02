@@ -1,7 +1,27 @@
-const socket = io(); // conexão do client com o servidor
+import { emitirTextoEditor } from "./socket-front-documento.js";
+
+const parametros = new URLSearchParams(window.location.search);
+const nomeDocumento = parametros.get("nome");
+
 
 const textoEditor = document.getElementById("editor-texto");
+const tituloDocumento = document.getElementById("titulo-documento");
+
+tituloDocumento.textContent = nomeDocumento || "Documento sem titulo"; 
+
+selecionarDocumento(nomeDocumento);
+
 
 textoEditor.addEventListener("keyup", () => {
-    socket.emit("text_area", textoEditor.value);
+    emitirTextoEditor({
+        texto: textoEditor.value, 
+        nomeDocumento,
+    })
 });
+
+function atualizaTextoEditor(texto) {
+    textoEditor.value = texto;
+};
+
+
+export { atualizaTextoEditor };
